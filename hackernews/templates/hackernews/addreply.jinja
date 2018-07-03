@@ -1,0 +1,13 @@
+{% extends 'hackernews/base.jinja' %}
+
+{% block title %}Add reply{% endblock %}
+
+{% block content %}
+  <h2>Add reply</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit">add reply</button>
+  </form>
+
+  {% endblock %}

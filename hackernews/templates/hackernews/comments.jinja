@@ -1,0 +1,20 @@
+
+
+	<li style="list-style-type: none;">
+		<div style="margin-bottom: 5px">
+			<span style="font-size: 8pt">{{comment.added_by.username}} | {{nowtime - comment.added_time}} hours ago</span>
+			<p style="color: #000000">{{comment.content}}</p>
+			<a href="{{url ('hackernews:addreply', comment.linked_to.id, comment.id)}}" style="color: #828282; font-size: 7pt;"> reply </a>
+		</div>
+		{% if com_list.filter(parent=comment).exists()%}
+		<ul>
+			{% for node in com_list.filter(parent=comment) %}
+				{% with comment = node %}
+					{% include "hackernews/comments.jinja" %}
+				{% endwith %}
+			{% endfor %}
+		</ul>
+		{% endif %}
+	</li>
+
+ 

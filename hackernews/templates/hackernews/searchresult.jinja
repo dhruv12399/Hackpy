@@ -1,0 +1,40 @@
+{% block title %}{% endblock %}
+
+{% block content %}
+  
+  <center>
+		<table  class="main_table" >
+			<tr>
+				<td bgcolor="#ff6600">
+					<table style="padding: 2px" width="100%" cellspacing="0" cellpadding="0" >
+						<tr>
+							<td style="width: 18px; padding-right: 4px"><img src="https://news.ycombinator.com/y18.gif" width="20" height="20" style="border:1px white solid; margin: 1px"></td>
+							<td style="color: #000000;"><strong>Hacker News</strong></td>
+							<td style="line-height: 12pt; height: 10px; text-align: left;" > <a href="{{url ('hackernews:addnewlink')}}" style="color: #000000">ADD NEW LINK</a></td>
+							<td style="color: #000000; text-align: right;padding-right: 10px">{{ request.user.username }}</td>	
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr style="height:10px"></tr>
+			<tr>
+				<td>
+					<table cellspacing="0" cellpadding="0">
+						{% for link in res %}
+							<tr>
+								<td style="text-align: center; width: 6px;">{{loop.index}}.</td>
+								
+								<td><a href="{{link['_source']['url']}}" style="color: #000000">{{link['_source']['title']}}</a><span style="font-size: 8pt">({{link['_source']['parent']}})</span></td>
+							</tr>
+							
+							<tr style="height:5px; display: block;"  ></tr>
+						{% endfor %}		
+					</table>
+				</td>
+			</tr>
+			<tr style="height:2px; display: block;" bgcolor="#ff6600"></tr>
+			
+		</table>
+	</center>
+
+  {% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'hackernews/base.jinja' %}
+
+{% block title %}Add Link{% endblock %}
+
+{% block content %}
+
+	<div class="jumbotron">
+  		<h2 class="display-4">ADD NEW LINK</h2>
+  	</div>
+
+  <form method="post">
+	{% csrf_token %}
+	<div class="form-group">
+		{{ form.title.errors }}
+		<label for="{{ form.title.id_for_label }}">Title:</label>
+		{{ form.title }}
+	</div>
+	<div class="form-group">
+		{{ form.url.errors }}
+		<label for="{{ form.url.id_for_label }}">URL:</label>
+		{{ form.url }}
+	</div>
+	<button type="submit" class="btn btn-primary">ADD</button>
+  </form>
+
+  
+
+{% endblock %}

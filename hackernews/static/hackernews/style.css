@@ -1,0 +1,17 @@
+body {
+
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 10pt;
+    color: #828282;
+}
+
+p{
+	margin-bottom: 2px;
+}
+
+.main_table {
+	
+	margin: 10px;
+	width: 85%;
+	background-color: #f6f6ef;
+}
