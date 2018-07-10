@@ -4,7 +4,7 @@
 
 <center>
 	<table  class="main_table" >
-		{% cache 1800 'main_header' %}
+		{% cache 3600 'main_header' %}
 		<tr>
 			<td bgcolor="#ff6600">
 				<table class="header" cellspacing="0" cellpadding="0" >
@@ -12,13 +12,13 @@
 						<td class="logo-cell"><a href="{{url ('hackernews:home')}}"><img src="https://news.ycombinator.com/y18.gif" class="logo"></a></td>
 						<td> <a href="{{url ('hackernews:home')}}"><strong>Hacker News</strong></a></td>
 						<td class="add-new-link" > <a href="{{url ('hackernews:addnewlink')}}">ADD NEW LINK</a></td>
+		{% endcache %}
 						<td class="username-cell">{{ request.user.username }}</td>	
 					</tr>
 				</table>
 			</td>
 		</tr>
 		<tr class="gap"></tr>
-		{% endcache %}
 		<tr>
 			<td>
 				<table cellspacing="0" cellpadding="0">
@@ -59,6 +59,7 @@
 								<a href="?page={{ linklist.number+1 }}" class="next-page">More</a>
 							{% endif %}
 						</tr>
+						{% cache 3600 'search_bar' %}
 						<tr class="seperator"></tr>
 						<tr class="search-row">
 							<td class="search">
@@ -68,6 +69,7 @@
 								</form>
 							</td>
 						</tr>
+						{% endcache %}
 					</table>
 				</table>
 			</td>
