@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from hackernews.models import Link, Comments
 
-
 class LinkSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Link

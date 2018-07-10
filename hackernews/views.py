@@ -40,9 +40,8 @@ def calculate_score(votes, item_hour_age, gravity=1.8):
 
 
 def home(request):
-	print cache
 	cache_key = 'linklist'
-	cache_time = 60
+	cache_time = 3600
 	linklist = cache.get('linklist')
 	if not linklist:
 		linklist = Link.objects.all()
@@ -79,9 +78,7 @@ def add_new_link(request):
 			form_instance.added_time = timezone.now()
 			form_instance.parent = form_instance.url.split('/')[2]
 			form_instance.save()
-
 		return HttpResponseRedirect(reverse('hackernews:home'))
-
 	else:
 		return render(request, 'hackernews/addnewlink.jinja', {'form': form_link})
 
@@ -121,17 +118,13 @@ def add_reply(request, comment_id, link_id):
 			form_instance.parent = comment
 			form_instance.save()
 		return HttpResponseRedirect(reverse('hackernews:commentpage',args = (link_id, )))
-
 	else:
 		return render(request, 'hackernews/addreply.jinja', {'form':form_reply, 'comment':comment, 'nowtime':nowtime})
 
 
 @login_required
-
 def upvote(request, link_id):
-	print "link_id"
 	link = get_object_or_404(Link, pk=link_id)
-	print "link found"
 	link.upvoted_users.add(request.user)
 	link.votes += 1
 	link.save()		
@@ -147,7 +140,6 @@ def search(request):
 		l_id = int(r['_id'])
 		link = get_object_or_404(Link, pk=l_id)
 		linklist.append(link)
-	print "here1"
 	nowtime = timezone.now()
 	data = render(request, 'hackernews/searchresult.jinja', {'linklist':linklist, 'nowtime':nowtime})
 	return data

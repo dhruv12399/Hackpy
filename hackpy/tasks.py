@@ -11,10 +11,6 @@ from django.utils import timezone
 from celery import Celery
 
 @app.task
-def add(x, y):
-    return x + y
-
-@app.task
 def ScanPage(i):
 	reload(sys)
 	sys.setdefaultencoding('utf8')

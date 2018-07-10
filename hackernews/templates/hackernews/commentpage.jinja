@@ -5,80 +5,72 @@
 {% block content %}
 
 <center>
-		<table  class="main_table" >
-			<tr>
-				<td bgcolor="#ff6600">
-					<table style="padding: 2px" width="100%" cellspacing="0" cellpadding="0" >
-						<tr>
-							<td style="width: 18px; padding-right: 4px"><a href="{{url ('hackernews:home')}}"><img src="https://news.ycombinator.com/y18.gif" width="20" height="20" style="border:1px white solid; margin: 1px"></a></td>
-							<td style="color: #000000;"><a href="{{url ('hackernews:home')}}"><strong>Hacker News</strong></a></td>
-							<td style="line-height: 12pt; height: 10px" > <a href="{{url ('hackernews:addnewlink')}}" style="color: #000000">ADD NEW LINK</a></td>
-							<td style="color: #000000">{{ request.user.username }}</td>	
-							
-						</tr>
-						
-					</table>
-					
-				</td>
-			</tr>
-			<tr style="height:10px"></tr>
-			<tr>
-				<td>
-					<table cellspacing="0" cellpadding="0">
-						<tr>
-							<td width="10px"></td>
-							<td><a href="{{link.url}}" style="color: #000000">{{link.title}}</a><span style="font-size: 8pt">({{link.parent}})</span></td>
-						</tr>
-						<tr>
-							<td></td>
-							<td style="font-size: 7pt">{{link.votes}} points by {{link.added_by}} | 
-								{% if (nowtime - link.added_time).days < 1 %}
-									{% if (nowtime - link.added_time).seconds/3600 < 1 %}
-										{{((nowtime - link.added_time).seconds/60)|round|int }} minutes ago 
-									{% else %}
-										{{((nowtime - link.added_time).seconds/3600)|round|int }} hours ago
-									{% endif %}
+	<table  class="main_table" >
+		<tr>
+			<td bgcolor="#ff6600">
+				<table class="header" cellspacing="0" cellpadding="0" >
+					<tr>
+						<td class="logo-cell"><a href="{{url ('hackernews:home')}}"><img src="https://news.ycombinator.com/y18.gif" class="logo"></a></td>
+						<td><a href="{{url ('hackernews:home')}}"><strong>Hacker News</strong></a></td>
+						<td class="add-new-link"> <a href="{{url ('hackernews:addnewlink')}}">ADD NEW LINK</a></td>
+						<td class="username-cell">{{ request.user.username }}</td>	
+					</tr>	
+				</table>
+				
+			</td>
+		</tr>
+		<tr class="gap"></tr>
+		<tr>
+			<td>
+				<table cellspacing="0" cellpadding="0">
+					<tr>
+						<td width="10px"></td>
+						<td><a href="{{link.url}}">{{link.title}}</a><span class="parent">({{link.parent}})</span></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td class="sub-text">
+							{{link.votes}} points by {{link.added_by}} | 
+							{% if (nowtime - link.added_time).days < 1 %}
+								{% if (nowtime - link.added_time).seconds/3600 < 1 %}
+									{{((nowtime - link.added_time).seconds/60)|round|int }} minutes ago 
 								{% else %}
-									{{(nowtime - link.added_time).days}} days ago
+									{{((nowtime - link.added_time).seconds/3600)|round|int }} hours ago
 								{% endif %}
-								| <a href="{{url ('hackernews:commentpage', link.id)}}" style="color: #828282">{{link.comments_set.count()}} comments</a></td>
-						</tr>
-						<tr style="height:10px;"></tr>
-						<tr>
-							<td></td>
-							<td>
-								<form method="post">
-									{% csrf_token %}
-									<textarea name="content" required id="id_content" rows="6" cols="60"></textarea>
-									<br>
-									<br>
-									<input type="submit" value="add comment">
-								</form>
-							</td>
-						</tr>
-					</table>
-					<br>
-					<br>
-
-					<table >
-						<tr>
-							<div style="padding-left: 15px" width="90%">
-								{% for comment in com_list.filter(parent__isnull=True) %}
-									{% include "hackernews/comments.jinja" %}
-								{% endfor %}
-							</div>
-						</tr>
-					</table>
-				</td>
-			</tr>
-
-		</table>
-
-	</center>
-
-	
-
- 
-
+							{% else %}
+								{{(nowtime - link.added_time).days}} days ago
+							{% endif %}
+							| <a href="{{url ('hackernews:commentpage', link.id)}}" style="color: #828282">{{link.comments_set.count()}} comments</a>
+						</td>
+					</tr>
+					<tr class="gap"></tr>
+					<tr>
+						<td></td>
+						<td>
+							<form method="post">
+								{% csrf_token %}
+								<textarea name="content" required id="id_content" rows="6" cols="60"></textarea>
+								<br>
+								<br>
+								<input type="submit" value="add comment">
+							</form>
+						</td>
+					</tr>
+				</table>
+				<br>
+				<br>
+				<table>
+					<tr>
+						<div class="comments">
+							{% for comment in com_list.filter(parent__isnull=True) %}
+								{% include "hackernews/comments.jinja" %}
+							{% endfor %}
+						</div>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</center>
 
 {% endblock %}

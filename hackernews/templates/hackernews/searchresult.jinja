@@ -8,28 +8,28 @@
 	<table  class="main_table" >
 		<tr>
 			<td bgcolor="#ff6600">
-				<table style="padding: 2px" width="100%" cellspacing="0" cellpadding="0" >
+				<table class="header" cellspacing="0" cellpadding="0" >
 					<tr>
-						<td style="width: 18px; padding-right: 4px"><a href="{{url ('hackernews:home')}}"><img src="https://news.ycombinator.com/y18.gif" width="20" height="20" style="border:1px white solid; margin: 1px"></a></td>
-						<td style="color: #000000;"> <a href="{{url ('hackernews:home')}}"><strong>Hacker News</strong></a></td>
-						<td style="line-height: 12pt; height: 10px; text-align: left;" > <a href="{{url ('hackernews:addnewlink')}}" style="color: #000000">ADD NEW LINK</a></td>
-						<td style="color: #000000; text-align: right;padding-right: 10px">{{ request.user.username }}</td>	
+						<td class="logo-cell"><a href="{{url ('hackernews:home')}}"><img src="https://news.ycombinator.com/y18.gif" class="logo"></a></td>
+						<td> <a href="{{url ('hackernews:home')}}"><strong>Hacker News</strong></a></td>
+						<td class="add-new-link" > <a href="{{url ('hackernews:addnewlink')}}">ADD NEW LINK</a></td>
+						<td class="username-cell">{{ request.user.username }}</td>	
 					</tr>
 				</table>
 			</td>
 		</tr>
-		<tr style="height:10px"></tr>
+		<tr class="gap"></tr>
 		<tr>
 			<td>
 				<table cellspacing="0" cellpadding="0">
 					{% for link in linklist %}
 						<tr>
-							<td style="text-align: center; width: 6px;">{{loop.index}}.</td>									
-							<td><a href="{{link.url}}" style="color: #000000">{{link.title}}</a><span style="font-size: 8pt">({{link.parent}})</span></td>
+							<td class="numbering">{{loop.index}}.</td>									
+							<td><a href="{{link.url}}">{{link.title}}</a><span class="parent">({{link.parent}})</span></td>
 						</tr>
 						<tr>
 							<td></td>
-							<td style="font-size: 7pt">
+							<td class="sub-text">
 								{{link.votes}} points by {{link.added_by}} | 
 								{% if (nowtime - link.added_time).days < 1 %}
 									{% if (nowtime - link.added_time).seconds/3600 < 1 %}
@@ -43,7 +43,7 @@
 								| <a href="{{url ('hackernews:commentpage', link.id)}}" style="color: #828282">{{link.comments_set.count()}} comments</a>
 							</td>
 						</tr>
-						<tr style="height:5px; display: block;"  ></tr>
+						<tr class="spacer"></tr>
 					{% endfor %}	
 				</table>
 			</td>
@@ -51,4 +51,4 @@
 	</table>
 </center>
 
-  {% endblock %}
+{% endblock %}

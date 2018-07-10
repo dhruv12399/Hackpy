@@ -1,29 +1,44 @@
 {% extends 'hackernews/base.jinja' %}
 
+{% block title %}Sign Up{% endblock %}
+
 {% block content%}
 
 <h2>Sign up</h2>
 
 	<form  action="{{ url ('hackernews:signup')}}" method="POST">
 		{% csrf_token %}
-		{{ form }}
+		<label for="id_username" class="signup-label">Username:</label>
+		<input type="text" name="username" autofocus required id="id_username" maxlength="150" />
+		<br>
+		<br>
+		<label for="id_password1" class="signup-label">Password:</label>
+		<input type="password" name="password1" required id="id_password1" />
+		<br>
+		<br>
+		<label for="id_password2" class="signup-label">Password confirmation:</label>
+		<input type="password" name="password2" required id="id_password2" />
+		<br>
+		<br>
+		{% if form.errors %}
+			
+			{% for field in form %}
+				{% for error in field.errors %}
+						<strong style="color: red">{{ error }}</strong>
+						<br>
+				{% endfor %}
+			{% endfor %}
+			
+			{% for error in form.non_field_errors() %}
+					<strong style="color: red">{{ error }}</strong>
+					<br>
+			{% endfor %}
 
-        {% if form.errors %}
-            
-            {% for field in form %}
-                {% for error in field.errors %}
-                        <strong>{{ error }}</strong>
-                {% endfor %}
-            {% endfor %}
-            
-            {% for error in form.non_field_errors() %}
-                    <strong>{{ error }}</strong>
-            {% endfor %}
-
-        {% endif %}
-		
-		<button type="submit">Sign up</button>
-		<a href="{{ url ('hackernews:login') }}">LOGIN</a>
+		{% endif %}
+		<br>
+		<input type="submit" value="Sign up" class="signup-button">
+		<a href="{{ url ('hackernews:login') }}"><input type="button" value="Login"></a>
 	</form>
+	
 
 {% endblock %}

@@ -9,6 +9,12 @@ a, a:hover{
 	color: #000000;
 	text-decoration: none;
 }
+h2{
+	color: #000000;
+	font-size: 24pt;
+	margin-left: 35px;
+	padding: 10px;
+}
 
 p{
 	margin-bottom: 2px;
@@ -16,6 +22,8 @@ p{
 
 .upvote{
 	cursor: pointer;
+	text-align: center;
+	width: 18px;
 }
 
 .nosee {
@@ -28,4 +36,99 @@ p{
 	margin: 10px;
 	width: 85%;
 	background-color: #f6f6ef;
+}
+
+.header{
+	padding: 2px;
+	width: 100%;
+}
+
+.logo-cell{
+	width: 18px;
+	padding-right: 4px;
+}
+
+.logo{
+	border:1px white solid;
+	margin: 1px;
+	width: 20px;
+	height: 20px;
+}
+
+.add-new-link{
+	line-height: 12pt;
+	height: 10px;
+	text-align: left;
+}
+
+.username-cell{
+	color: #000000;
+	text-align: right;
+	padding-right: 10px;
+}
+
+.gap{
+	height:10px;
+}
+
+.numbering{
+	text-align: center;
+	width: 6px;
+}
+
+.parent{
+	font-size: 8pt
+}
+
+.spacer{
+	height:5px;
+	display: block;
+}
+
+.sub-text{
+	font-size: 7pt;
+}
+
+.next-page{
+	display: block;
+	margin:10px 40px 5px;
+}
+
+.seperator{
+	height:2px;
+	display: block;
+	background-color: #ff6600;
+}
+
+.search-row{
+	display: flex;
+	height: 50px;
+	justify-content: center;
+	align-content: center;
+}
+
+.search{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.comments{
+	padding-left: 15px;
+	width: 90%;
+}
+
+.helptext{
+	width: 50%;
+	font-size: 5pt;
+	margin: 10px;
+}
+
+.signup-label{
+	width: 100px;
+	text-align: right;
+}
+
+.signup-button{
+	margin-left: 35px;
 }

@@ -3,10 +3,39 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-  <h2>Login</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form }}
-    <button type="submit">Login</button>
-  </form>
+
+<h2>Login</h2>
+
+	<form method="post">
+		{% csrf_token %}
+		<label for="id_username" class="signup-label">Username:</label>
+		<input type="text" name="username" autofocus required id="id_username" maxlength="254" />
+		<br>
+		<br>
+		<label for="id_password" class="signup-label">Password:</label>
+		<input type="password" name="password" required id="id_password" />
+		<br>
+		<br>
+		{% if form.errors %}    
+			{% for field in form %}
+				{% for error in field.errors %}
+						<strong style="color: red">{{ error }}</strong>
+						<br>
+				{% endfor %}
+			{% endfor %}
+			
+			{% for error in form.non_field_errors() %}
+					<strong style="color: red">{{ error }}</strong>
+					<br>
+			{% endfor %}
+		{% endif %}
+		<input type="submit" value="Login" class="signup-button">
+		<a href="{{ url ('hackernews:signup') }}"><input type="button" value="Sign Up"></a>
+	</form>
 {% endblock %}
+
+
+
+
+
+
