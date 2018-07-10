@@ -1,8 +1,17 @@
 
-
 	<li style="list-style-type: none;">
 		<div style="margin-bottom: 5px">
-			<span style="font-size: 8pt">{{comment.added_by.username}} | {{nowtime - comment.added_time}} hours ago</span>
+			<span style="font-size: 8pt">{{comment.added_by.username}} | 
+					{% if (nowtime - link.added_time).days < 1 %}
+						{% if (nowtime - link.added_time).seconds/3600 < 1 %}
+							{{((nowtime - link.added_time).seconds/60)|round|int }} minutes ago 
+						{% else %}
+							{{((nowtime - link.added_time).seconds/3600)|round|int }} hours ago
+						{% endif %}
+					{% else %}
+						{{(nowtime - link.added_time).days}} days ago
+					{% endif %}
+			</span>
 			<p style="color: #000000">{{comment.content}}</p>
 			<a href="{{url ('hackernews:addreply', comment.linked_to.id, comment.id)}}" style="color: #828282; font-size: 7pt;"> reply </a>
 		</div>

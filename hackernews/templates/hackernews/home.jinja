@@ -2,91 +2,94 @@
 
 {% block content %}
 
-	<center>
-		<table  class="main_table" >
-			<tr>
-				<td bgcolor="#ff6600">
-					<table style="padding: 2px" width="100%" cellspacing="0" cellpadding="0" >
+<center>
+	<table  class="main_table" >
+		{% cache 1800 'main_header' %}
+		<tr>
+			<td bgcolor="#ff6600">
+				<table style="padding: 2px" width="100%" cellspacing="0" cellpadding="0" >
+					<tr>
+						<td style="width: 18px; padding-right: 4px"><a href="{{url ('hackernews:home')}}"><img src="https://news.ycombinator.com/y18.gif" width="20" height="20" style="border:1px white solid; margin: 1px"></a></td>
+						<td style="color: #000000;"> <a href="{{url ('hackernews:home')}}"><strong>Hacker News</strong></a></td>
+						<td style="line-height: 12pt; height: 10px; text-align: left;" > <a href="{{url ('hackernews:addnewlink')}}" style="color: #000000">ADD NEW LINK</a></td>
+						<td style="color: #000000; text-align: right;padding-right: 10px">{{ request.user.username }}</td>	
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr style="height:10px"></tr>
+		{% endcache %}
+		<tr>
+			<td>
+				<table cellspacing="0" cellpadding="0">
+					{% for link in linklist %}
 						<tr>
-							<td style="width: 18px; padding-right: 4px"><img src="https://news.ycombinator.com/y18.gif" width="20" height="20" style="border:1px white solid; margin: 1px"></td>
-							<td style="color: #000000;"><strong>Hacker News</strong></td>
-							<td style="line-height: 12pt; height: 10px; text-align: left;" > <a href="{{url ('hackernews:addnewlink')}}" style="color: #000000">ADD NEW LINK</a></td>
-							<td style="color: #000000; text-align: right;padding-right: 10px">{{ request.user.username }}</td>	
-						</tr>
-					</table>
-				</td>
-			</tr>
-			<tr style="height:10px"></tr>
-			<tr>
-				<td>
-					<table cellspacing="0" cellpadding="0">
-						{% for link in linklist %}
-							<tr>
-								<td style="text-align: center; width: 6px;">{{loop.index}}.</td>
+							<td style="text-align: center; width: 6px;">{{loop.index + 30*(linklist.number-1)}}.</td>
+								{% if request.user in link.upvoted_users.all() %}
+									<td class="upvote nosee" width="18px" style="text-align: center;" data-link-id="{{ link.id }}"></td>
+								{% else %}
 								<td class="upvote" width="18px" style="text-align: center;" data-link-id="{{ link.id }}">
-									{% if request.user in link.upvoted_users.all() %}
-									{% else %}
-										<img src="https://news.ycombinator.com/grayarrow.gif">
-									{% endif %}									
+									<img src="https://news.ycombinator.com/grayarrow.gif">
 								</td>
-								<td><a href="{{link.url}}" style="color: #000000">{{link.title}}</a><span style="font-size: 8pt">({{link.parent}})</span></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td></td>
-								<td style="font-size: 7pt">
-									{{link.votes}} points by {{link.added_by}} | 
-									{% if (nowtime - link.added_time).days < 1 %}
-										{% if (nowtime - link.added_time).seconds/3600 < 1 %}
-											{{((nowtime - link.added_time).seconds/60)|round|int }} minutes ago 
-										{% else %}
-											{{((nowtime - link.added_time).seconds/3600)|round|int }} hours ago
-										{% endif %}
+								{% endif %}									
+							<td><a href="{{link.url}}" style="color: #000000">{{link.title}}</a><span style="font-size: 8pt">({{link.parent}})</span></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td style="font-size: 7pt">
+								{{link.votes}} points by {{link.added_by}} | 
+								{% if (nowtime - link.added_time).days < 1 %}
+									{% if (nowtime - link.added_time).seconds/3600 < 1 %}
+										{{((nowtime - link.added_time).seconds/60)|round|int }} minutes ago 
 									{% else %}
-										{{(nowtime - link.added_time).days}} days ago
+										{{((nowtime - link.added_time).seconds/3600)|round|int }} hours ago
 									{% endif %}
-									| <a href="{{url ('hackernews:commentpage', link.id)}}" style="color: #828282">{{link.comments_set.count()}} comments</a>
-								</td>
-							</tr>
-							<tr style="height:5px; display: block;"  ></tr>
-						{% endfor %}		
+								{% else %}
+									{{(nowtime - link.added_time).days}} days ago
+								{% endif %}
+								| <a href="{{url ('hackernews:commentpage', link.id)}}" style="color: #828282">{{link.comments_set.count()}} comments</a>
+							</td>
+						</tr>
+						<tr style="height:5px; display: block;"  ></tr>
+					{% endfor %}	
+					<table width="100%">	
+					<tr>
+						{% if linklist.has_other_pages %}
+							<a href="?page={{ linklist.number+1 }}" style="text-decoration: none; color: #000000; display: block; margin:10px 40px 5px ">More</a>
+						{% endif %}
+					</tr>
+					<tr style="height:2px; display: block;" bgcolor="#ff6600"></tr>
+					<tr style="display: flex;height: 50px;justify-content: center;align-content: center;">
+						<td style="display: flex;flex-direction: column;justify-content: center;">
+						<form action="{{url ('hackernews:search')}}" method="get">
+							<input type="text" name="search" required id="id_search" maxlength="50" />
+							<button type="submit">Search</button>
+						</form> 
+						</td>
+					</tr>
 					</table>
-				</td>
-			</tr>
-			<tr style="height:2px; display: block;" bgcolor="#ff6600"></tr>
-			<tr><form action="{{url ('hackernews:search')}}" method="get">
-					<input type="text" name="search" required id="id_search" maxlength="50" />
-					<button type="submit">Search</button>
-				</form> 
-			</tr>
-		</table>
-	</center>
+				</table>
+			</td>
+		</tr>	
+	</table>
+</center>
+	
 
-	<script>
-		$(".upvote").click(function(){
-			var link_id = $(this).attr('data-link-id');
-			console.log(link_id);
-			$.ajax({
-				url: link_id + "/upvote/",
-				type:"POST"
-			});
-			$(this).empty();
+<script>
+	$(".upvote").click(function(){
+		var link_id = $(this).attr('data-link-id');
+		console.log(link_id);
+		$.ajax({
+			url: link_id + "/upvote/",
+			type:"POST",
+			data: {"csrfmiddlewaretoken":"{{csrf_token}}" }
 		});
+		console.log($(this))
+		$(this).addClass("nosee");
 
-		$(document).ready(function(){
-			$("#search").click(function(){
-				var content = $('#searchbox').val();
-				console.log(content)
-				$.ajax({
-					url: "search/",
-					type:"GET",
-					data: { 'content': content }
-				}, function(res) {
-					console.log(res);
-				});
-			});
-		})
+	});
 
-	</script>
+</script>
 
 {% endblock %}

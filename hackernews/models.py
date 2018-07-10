@@ -10,7 +10,7 @@ from django.conf import settings
 
 class Link(models.Model):
 	title = models.CharField(max_length = 200)
-	url = models.URLField(max_length = 200)
+	url = models.URLField(max_length = 400)
 	parent = models.CharField(max_length = 100)
 	votes = models.IntegerField(default = 1)
 	added_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'added_by')

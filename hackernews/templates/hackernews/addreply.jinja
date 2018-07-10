@@ -3,11 +3,44 @@
 {% block title %}Add reply{% endblock %}
 
 {% block content %}
-  <h2>Add reply</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form }}
-    <button type="submit">add reply</button>
-  </form>
+<center>
+		<table  class="main_table" >
+			<tr>
+				<td bgcolor="#ff6600">
+					<table style="padding: 2px" width="100%" cellspacing="0" cellpadding="0" >
+						<tr>
+							<td style="width: 18px; padding-right: 4px"><a href="{{url ('hackernews:home')}}"><img src="https://news.ycombinator.com/y18.gif" width="20" height="20" style="border:1px white solid; margin: 1px"></a></td>
+							<td style="color: #000000;"><strong>Add Reply</strong></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr style="height:10px"></tr>
+			<tr>
+				<td style="padding: 10px">
+					<table cellspacing="0" cellpadding="0">
+						<tr>
+							<div style="margin-bottom: 5px">
+								<span style="font-size: 8pt">{{comment.added_by.username}} | {{nowtime - comment.added_time}} hours ago</span>
+								<p style="color: #000000">{{comment.content}}</p>
+							</div>
+						</tr>
+						<tr>
+							<td>
+								<form method="post">
+									{% csrf_token %}
+									<textarea name="content" required id="id_content" rows="6" cols="60"></textarea>
+									<br>
+									<br>
+									<input type="submit" value="add reply">
+								</form>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
 
+		</table>
+
+	</center>
   {% endblock %}

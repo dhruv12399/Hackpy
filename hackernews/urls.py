@@ -17,6 +17,4 @@ urlpatterns = [
     url(r'^(?P<link_id>[0-9]+)/upvote/$', views.upvote, name='upvote'),
     url(r'^search/$', views.search, name='search'),
 
-    url(r'^links/$', views.LinkList.as_view()),
-    url(r'^links/(?P<pk>[0-9]+)/$', views.LinkDetail.as_view()),
 ]

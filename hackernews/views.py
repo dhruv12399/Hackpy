@@ -15,11 +15,9 @@ import requests
 from bs4 import BeautifulSoup
 import sys
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import generics
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from .serializers import LinkSerializer
 from elasticsearch import Elasticsearch
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.cache import cache
 
 # Create your views here.
 
@@ -40,17 +38,33 @@ def signup(request):
 def calculate_score(votes, item_hour_age, gravity=1.8):
 	return (votes - 1) / pow((item_hour_age+2), gravity)
 
-@login_required
+
 def home(request):
-	print 'here1'
-	linklist = Link.objects.all()
-	for link in linklist:
-		ith = (timezone.now() - link.added_time).seconds/3600
-		if (timezone.now() - link.added_time).days > 0 :
-			ith += (timezone.now() - link.added_time).days*24
-		link.score = calculate_score(link.votes, ith)
-		link.save()
-	linklist = linklist.order_by('-score')
+	print cache
+	cache_key = 'linklist'
+	cache_time = 60
+	linklist = cache.get('linklist')
+	if not linklist:
+		linklist = Link.objects.all()
+		for link in linklist:
+			ith = (timezone.now() - link.added_time).seconds/3600
+			if (timezone.now() - link.added_time).days > 0 :
+				ith += (timezone.now() - link.added_time).days*24
+			link.score = calculate_score(link.votes, ith)
+			link.save()
+		linklist = linklist.order_by('-score')
+		cache.set(cache_key,linklist,cache_time)
+	
+	page = request.GET.get('page', 1)
+
+	paginator = Paginator(linklist, 30)
+	try:
+		linklist = paginator.page(page)
+	except PageNotAnInteger:
+		linklist = paginator.page(1)
+	except EmptyPage:
+		linklist = paginator.page(paginator.num_pages)
+	
 	nowtime = timezone.now()
 	return render(request, 'hackernews/home.jinja', {'linklist':linklist, 'nowtime':nowtime})
 
@@ -71,7 +85,7 @@ def add_new_link(request):
 	else:
 		return render(request, 'hackernews/addnewlink.jinja', {'form': form_link})
 
-@login_required
+
 def comment_page(request, link_id):
 	link = get_object_or_404(Link, pk = link_id)
 	com_list = Comments.objects.filter( linked_to = link)
@@ -97,6 +111,7 @@ def add_reply(request, comment_id, link_id):
 	link = get_object_or_404(Link, pk = link_id)
 	com_list = Comments.objects.filter( linked_to = link)
 	form_reply = CommentForm()
+	nowtime = timezone.now()
 	if request.method == 'POST':
 		form_reply = CommentForm(request.POST)
 		if form_reply.is_valid():
@@ -108,11 +123,11 @@ def add_reply(request, comment_id, link_id):
 		return HttpResponseRedirect(reverse('hackernews:commentpage',args = (link_id, )))
 
 	else:
-		return render(request, 'hackernews/addreply.jinja', {'form':form_reply, 'com_list':com_list})
+		return render(request, 'hackernews/addreply.jinja', {'form':form_reply, 'comment':comment, 'nowtime':nowtime})
 
 
 @login_required
-@csrf_exempt
+
 def upvote(request, link_id):
 	print "link_id"
 	link = get_object_or_404(Link, pk=link_id)
@@ -122,20 +137,17 @@ def upvote(request, link_id):
 	link.save()		
 	return
 
-class LinkList(generics.ListCreateAPIView):
-    queryset = Link.objects.all()
-    serializer_class = LinkSerializer
-
-class LinkDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Link.objects.all()
-    serializer_class = LinkSerializer
-
 def search(request):
-	print "here"
 	tobesearched = request.GET.get('search')
 	es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-	res = es.search(index="hackernews", body={"query": {"prefix": {'title':tobesearched}}})
+	res = es.search(index="index2", body={"size":100, "query": {"bool": {"must": [{"multi_match": {"query": tobesearched,"fields": ["title^5","title.ngram"]} }] } } })
 	res = res['hits']['hits']
+	linklist = []
+	for r in res:
+		l_id = int(r['_id'])
+		link = get_object_or_404(Link, pk=l_id)
+		linklist.append(link)
 	print "here1"
-	data = render(request, 'hackernews/searchresult.jinja', {'res':res})
+	nowtime = timezone.now()
+	data = render(request, 'hackernews/searchresult.jinja', {'linklist':linklist, 'nowtime':nowtime})
 	return data
