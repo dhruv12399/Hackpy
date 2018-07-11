@@ -26,13 +26,19 @@ p{
 	width: 18px;
 }
 
+.upvote-login{
+	cursor: pointer;
+	text-align: center;
+	width: 18px;	
+}
+
 .nosee {
     visibility: hidden;
     pointer-events: none;
     cursor: default;
 }
-.main_table {
-	
+
+.main_table {	
 	margin: 10px;
 	width: 85%;
 	background-color: #f6f6ef;

@@ -8,17 +8,23 @@
 	<table  class="main_table" >
 		<tr>
 			<td bgcolor="#ff6600">
-				<table style="padding: 2px" width="100%" cellspacing="0" cellpadding="0" >
+				<table class="header" cellspacing="0" cellpadding="0" >
 					<tr>
-						<td style="width: 18px; padding-right: 4px"><a href="{{url ('hackernews:home')}}"><img src="https://news.ycombinator.com/y18.gif" width="20" height="20" style="border:1px white solid; margin: 1px"></a></td>
+						<td class="logo-cell"><a href="{{url ('hackernews:home')}}"><img src="https://news.ycombinator.com/y18.gif" class="logo"></a></td>
 						<td style="color: #000000;"><strong>ADD NEW LINK</strong></td>
 						
-						<td style="color: #000000; text-align: right;padding-right: 10px">{{ request.user.username }}</td>	
+						<td class="username-cell">{{ request.user.username }}
+							{% if user.is_authenticated %}
+								| <a href="{{url ('hackernews:logout')}}">logout</a>
+							{% else %}
+								<a href="{{url ('hackernews:login')}}">login</a>
+							{% endif %}
+						</td>	
 					</tr>
 				</table>
 			</td>
 		</tr>
-		<tr style="height:10px"></tr>
+		<tr class="gap"></tr>
 		<tr>
 			<td style="padding: 18px">
 				<table cellspacing="0" cellpadding="0">

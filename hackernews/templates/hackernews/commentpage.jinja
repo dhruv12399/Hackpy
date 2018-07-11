@@ -13,7 +13,13 @@
 						<td class="logo-cell"><a href="{{url ('hackernews:home')}}"><img src="https://news.ycombinator.com/y18.gif" class="logo"></a></td>
 						<td><a href="{{url ('hackernews:home')}}"><strong>Hacker News</strong></a></td>
 						<td class="add-new-link"> <a href="{{url ('hackernews:addnewlink')}}">ADD NEW LINK</a></td>
-						<td class="username-cell">{{ request.user.username }}</td>	
+						<td class="username-cell">{{ request.user.username }}
+							{% if user.is_authenticated %}
+								| <a href="{{url ('hackernews:logout')}}">logout</a>
+							{% else %}
+								<a href="{{url ('hackernews:login')}}">login</a>
+							{% endif %}
+						</td>	
 					</tr>	
 				</table>
 				

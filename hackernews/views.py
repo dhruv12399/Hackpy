@@ -41,7 +41,7 @@ def calculate_score(votes, item_hour_age, gravity=1.8):
 
 def home(request):
 	cache_key = 'linklist'
-	cache_time = 3600
+	cache_time = 600
 	linklist = cache.get('linklist')
 	if not linklist:
 		linklist = Link.objects.all()
@@ -82,13 +82,14 @@ def add_new_link(request):
 	else:
 		return render(request, 'hackernews/addnewlink.jinja', {'form': form_link})
 
-
 def comment_page(request, link_id):
 	link = get_object_or_404(Link, pk = link_id)
 	com_list = Comments.objects.filter( linked_to = link)
 	nowtime = timezone.now()
 	form_com = CommentForm()
 	if request.method == 'POST':
+		if not request.user.is_authenticated:
+			return HttpResponseRedirect(reverse('hackernews:login'))
 		form_com = CommentForm(request.POST)
 		if form_com.is_valid():
 			form_instance = form_com.save(commit = False)
@@ -121,9 +122,16 @@ def add_reply(request, comment_id, link_id):
 	else:
 		return render(request, 'hackernews/addreply.jinja', {'form':form_reply, 'comment':comment, 'nowtime':nowtime})
 
-
 @login_required
 def upvote(request, link_id):
+	print "here"
+	if request.method == 'POST':
+		print "post"
+		print request.user.is_authenticated()
+		if not request.user.is_authenticated():
+			print "in if"
+			return HttpResponseRedirect(reverse('hackernews:login'))
+	print "out of if"
 	link = get_object_or_404(Link, pk=link_id)
 	link.upvoted_users.add(request.user)
 	link.votes += 1
@@ -141,5 +149,5 @@ def search(request):
 		link = get_object_or_404(Link, pk=l_id)
 		linklist.append(link)
 	nowtime = timezone.now()
-	data = render(request, 'hackernews/searchresult.jinja', {'linklist':linklist, 'nowtime':nowtime})
+	data = render(request, 'hackernews/searchresult.jinja', {'linklist':linklist, 'nowtime':nowtime, 'tobesearched':tobesearched})
 	return data
