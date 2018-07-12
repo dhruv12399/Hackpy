@@ -6,7 +6,7 @@ Django based project similar to hacker news to understand and implement django f
 - **Rest Framework** as API framework
 - **Elasticsearch** to implement search
 - **Memcached** for caching
-- **Beautifulsoap4** for parsing html while crawling data
+- **Beautifulsoup4** for parsing html while crawling data
 - **Celery** to run crawling tasks parallelly 
 - **Jinja2** as template language
 
