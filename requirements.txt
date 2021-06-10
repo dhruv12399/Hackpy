@@ -6,7 +6,7 @@ bs4==0.0.1
 celery==3.1.26.post2
 certifi==2018.4.16
 chardet==3.0.4
-Django==1.11.14
+Django==2.2.24
 django-celery==3.2.2
 django-extensions==2.0.7
 django-jinja==2.4.1
